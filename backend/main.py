@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import openai
+from openai import OpenAI
 import os
+from pathlib import Path
 
 # -------------------------
 # App setup
@@ -11,13 +12,15 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # for hackathon demo only
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# -------------------------
+# OpenAI client (NEW API)
+# -------------------------
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # -------------------------
 # Request schema
@@ -28,40 +31,25 @@ class AnalyzeRequest(BaseModel):
 # -------------------------
 # Load reasoning prompt
 # -------------------------
-with open("backend/reasoning_prompt.txt", "r") as f:
-    REASONING_PROMPT = f.read()
+BASE_DIR = Path(__file__).resolve().parent
+PROMPT_PATH = BASE_DIR / "reasoning_prompt.txt"
+REASONING_PROMPT = PROMPT_PATH.read_text()
 
 # -------------------------
 # Core endpoint
 # -------------------------
 @app.post("/analyze")
 async def analyze_ingredients(req: AnalyzeRequest):
-    ingredient_text = req.text.strip()
-
-    if not ingredient_text:
+    if not req.text.strip():
         return {"explanation": "I couldn’t find any ingredient information to analyze."}
 
-    messages = [
-        {
-            "role": "system",
-            "content": REASONING_PROMPT
-        },
-        {
-            "role": "user",
-            "content": f"Ingredient text:\n{ingredient_text}"
-        }
-    ]
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        temperature=0.4,
+        messages=[
+            {"role": "system", "content": REASONING_PROMPT},
+            {"role": "user", "content": f"Ingredient text:\n{req.text}"}
+        ],
+    )
 
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-4o-mini",
-            messages=messages,
-            temperature=0.4
-        )
-
-        explanation = response["choices"][0]["message"]["content"]
-
-        return {"explanation": explanation}
-
-    except Exception as e:
-        return {"explanation": f"ERROR: {str(e)}"}
+    return {"explanation": response.choices[0].message.content}
