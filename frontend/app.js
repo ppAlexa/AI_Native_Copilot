@@ -8,7 +8,7 @@ const detailsDiv = document.getElementById("detailsText");
 const toggleBtn = document.getElementById("toggleBtn");
 
 analyzeBtn.addEventListener("click", async () => {
-  // ❗ DO NOT clear responseBox.innerText anymore
+
   summaryDiv.innerText = "";
   detailsDiv.innerText = "";
   detailsDiv.style.display = "none";
