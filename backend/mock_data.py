@@ -1,4 +1,5 @@
 MOCK_INGREDIENTS = """
-Water, Sugar, Palm Oil, Whey Powder, Emulsifier (Soy Lecithin),
-Artificial Flavouring, Preservative (INS 202)
+Filtered water, Cane glucose syrup, Vegetable fat blend (sunflower and rice bran oil),
+Milk solids, Stabilizer (plant-derived gum), Emulsifier (lecithin),
+Natural-identical flavoring substances, Acidity regulator (citric acid)
 """
