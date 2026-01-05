@@ -21,12 +21,17 @@
 
     <div id="status"></div>
 
-    <div class="response-box" id="responseBox">
-      <!-- AI response appears here -->
+    <div class="response-box">
+      <div id="summaryText"></div>
+
+      <button id="toggleBtn" style="display:none; margin-top:10px;">
+        Show more
+      </button>
+
+      <div id="detailsText" style="display:none; margin-top:10px;"></div>
     </div>
   </div>
 
-  <!-- OCR library -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <script src="app.js"></script>
 
