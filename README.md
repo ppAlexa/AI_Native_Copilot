@@ -1,2 +1,3 @@
 # AI_Native_Copilot
-need to add it
+
+An AI-native co-pilot that helps people understand food ingredients at the moment decisions matter.
