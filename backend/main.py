@@ -5,9 +5,7 @@ from openai import OpenAI
 import os
 from pathlib import Path
 
-# -------------------------
-# App setup
-# -------------------------
+
 app = FastAPI()
 
 app.add_middleware(
@@ -17,27 +15,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# -------------------------
-# OpenAI client (NEW API)
-# -------------------------
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# -------------------------
-# Request schema
-# -------------------------
+
 class AnalyzeRequest(BaseModel):
     text: str
 
-# -------------------------
-# Load reasoning prompt
-# -------------------------
+
 BASE_DIR = Path(__file__).resolve().parent
 PROMPT_PATH = BASE_DIR / "reasoning_prompt.txt"
 REASONING_PROMPT = PROMPT_PATH.read_text()
 
-# -------------------------
-# Core endpoint
-# -------------------------
+
 @app.post("/analyze")
 async def analyze_ingredients(req: AnalyzeRequest):
     if not req.text.strip():
